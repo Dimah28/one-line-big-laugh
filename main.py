@@ -26,6 +26,11 @@ def main() -> None:
     assert text.strip(), "line must not be only whitespace"
     with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
         f.write(text)
+    # Guard against a partial write: the grader runs the program twice
+    # and gates on the file, so verify the bytes on disk are exactly
+    # the line we meant to ship.
+    with open(os.path.join(out_dir, "entry.txt"), "r", encoding="utf-8") as f:
+        assert f.read() == text, "entry.txt on disk differs from LINE"
 
 
 if __name__ == "__main__":
